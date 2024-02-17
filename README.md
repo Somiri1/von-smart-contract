@@ -1,1 +1,1 @@
-# von-smart-contract
+# Smart contract of the VON token by Vameon
