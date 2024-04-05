@@ -18,12 +18,7 @@ contract Vameon is
 
   constructor(
     address _trustedForwarder,
-    address vesting,
-    address liquidity,
-    address marketing,
-    address devAndSupport,
-    address treasury,
-    address staking
+    address _tokensHolder
   )
     ERC20("Vameon", "VON")
     ERC20Permit("Vameon")
@@ -31,12 +26,7 @@ contract Vameon is
     ERC2771ContextStorage(_trustedForwarder)
     FeeCollector(msg.sender)
   {
-    _mint(vesting, 340_000_000_000 * 10 ** decimals());
-    _mint(liquidity, 40_000_000_000 * 10 ** decimals());
-    _mint(marketing, 240_000_000_000 * 10 ** decimals());
-    _mint(devAndSupport, 100_000_000_000 * 10 ** decimals());
-    _mint(treasury, 150_000_000_000 * 10 ** decimals());
-    _mint(staking, 130_000_000_000 * 10 ** decimals());
+    _mint(_tokensHolder, 1_000_000_000_000 * 10 ** decimals());
   }
 
   function setTrustedForwarder(address _trustedForwarder) public onlyOwner {
