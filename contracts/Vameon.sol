@@ -3,34 +3,23 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./abstract/ERC2771ContextStorage.sol";
+import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
 import "./abstract/FeeCollector.sol";
 
-contract Vameon is
-  ERC20,
-  ERC20Permit,
-  ERC2771ContextStorage,
-  Ownable,
-  FeeCollector
-{
+contract Vameon is ERC20, ERC20Permit, ERC2771Context, FeeCollector {
   error InvalidFee();
 
   constructor(
     address _trustedForwarder,
-    address _tokensHolder
+    address _tokensHolder,
+    address _feeCollector
   )
     ERC20("Vameon", "VON")
     ERC20Permit("Vameon")
-    Ownable(msg.sender)
-    ERC2771ContextStorage(_trustedForwarder)
-    FeeCollector(msg.sender)
+    ERC2771Context(_trustedForwarder)
+    FeeCollector(_feeCollector)
   {
     _mint(_tokensHolder, 1_000_000_000_000 * 10 ** decimals());
-  }
-
-  function setTrustedForwarder(address _trustedForwarder) public onlyOwner {
-    _setTrustedForwarder(_trustedForwarder);
   }
 
   function _msgSender()
@@ -59,10 +48,6 @@ contract Vameon is
     returns (uint256)
   {
     return ERC2771Context._contextSuffixLength();
-  }
-
-  function setFeeCollector(address feeCollectorAddress) public onlyOwner {
-    _setFeeCollector(feeCollectorAddress);
   }
 
   function transferWithFee(
